@@ -5,8 +5,11 @@ RailsTweets::Application.routes.draw do
   match '/about', to: 'static_pages#about', via: 'get'
   match '/contact', to: 'static_pages#contact', via: 'get'
   match '/signup', to: 'users#new', via: 'get'
-  resources :microposts
+  match '/signin', to: 'sessions#new', via: 'get'
+  match '/signout', to: 'sessions#destory', via: 'delete'
 
+  resources :sessions, only:[:new, :create, :destory]
+  resources :microposts
   resources :users
 
   # The priority is based upon order of creation: first created -> highest priority.
