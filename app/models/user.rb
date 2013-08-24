@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  has_many :microposts, dependent: :destroy
+  
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   before_save { self.email = email.downcase }
@@ -10,14 +12,18 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
   has_secure_password
   validates :password, length: { minimum: 6 }
-  has_many :microposts
-  
+ 
   def User.new_remember_token
     SecureRandom.urlsafe_base64
   end
 
   def User.encrypt(token)
     Digest::SHA1.hexdigest(token.to_s)
+  end
+
+  def feed
+    Micropost.where("user_id=?", id)
+    
   end
 
   private
